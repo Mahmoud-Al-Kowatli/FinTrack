@@ -1,54 +1,89 @@
 :root {
     --primary: #2c3e50;
-    --accent: #27ae60; /* Green */
-    --danger: #e74c3c; /* Red */
-    --warning: #f39c12; /* Orange */
+    --accent: #27ae60;
+    --danger: #e74c3c;
+    --warning: #f39c12;
     --bg: #f0f2f5;
     --card-bg: #ffffff;
     --text: #2d3436;
+    --sidebar-width: 260px;
+}
+
+body.dark-mode {
+    --bg: #121212;
+    --card-bg: #1e1e1e;
+    --text: #ecf0f1;
+    --primary: #34495e;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--bg);
+    display: flex;
+    height: 100vh;
     margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg);
     color: var(--text);
+    overflow: hidden;
 }
 
-/* Navigation */
+/* --- Sidebar Style --- */
 .navbar {
+    width: var(--sidebar-width);
     background: var(--primary);
     color: white;
-    padding: 1rem 2rem;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    padding: 2rem 1rem;
+    flex-shrink: 0;
+    transition: all 0.3s;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+}
+
+.sidebar-links {
+    flex: 1;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.nav-btn {
+    background: transparent;
+    color: rgba(255,255,255,0.8);
+    border: none;
+    padding: 12px 15px;
+    text-align: left;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: 0.2s;
+    display: flex;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    gap: 10px;
 }
 
-.navbar h1 { margin: 0; font-size: 1.5rem; }
+.nav-btn:hover, .nav-btn.active {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
 
-/* Main Container */
+.sidebar-bottom {
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* --- Main Content Area --- */
 #app {
+    flex: 1;
     padding: 2rem;
-    max-width: 900px;
-    margin: 0 auto;
+    overflow-y: auto;
+    height: 100%;
 }
 
-/* Utilities */
-.hidden { display: none !important; }
-
-/* Cards */
-.card {
-    background: var(--card-bg);
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    margin-bottom: 1.5rem;
-    transition: transform 0.2s;
-}
-
-/* Dashboard Grid */
+/* --- Dashboard Grid & Cards --- */
 .dashboard-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -56,84 +91,134 @@ body {
     margin-bottom: 2rem;
 }
 
-.stat-card {
-    text-align: center;
+.card {
+    background: var(--card-bg);
     padding: 1.5rem;
     border-radius: 12px;
-    background: white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
 }
 
-.stat-card h3 { margin-top: 0; color: #636e72; font-weight: normal;}
+.stat-card h3 { margin-top: 0; color: #636e72; font-weight: normal; font-size: 1rem; }
 .stat-card .amount { font-weight: 800; font-size: 1.8rem; margin: 10px 0; }
 
 .stat-card.income .amount { color: var(--accent); }
 .stat-card.expense .amount { color: var(--danger); }
 
-/* Financial Health Indicators (Visual Feature) */
+/* Indicators */
 .balance-healthy { border-bottom: 4px solid var(--accent); }
 .balance-warning { border-bottom: 4px solid var(--warning); }
 .balance-danger { border-bottom: 4px solid var(--danger); }
 
-/* Chart Container */
-.chart-container {
-    position: relative;
-    height: 300px;
-    width: 100%;
+/* --- Transaction History List (إصلاح النصوص المبعثرة) --- */
+.transaction-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
 }
 
-/* Forms */
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: var(--card-bg);
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+body.dark-mode .transaction-item {
+    border-color: rgba(255,255,255,0.05);
+}
+
+.t-info h4 { margin: 0; font-size: 1rem; }
+.t-info small { color: #636e72; display: block; margin-top: 2px; }
+body.dark-mode .t-info small { color: #b2bec3; }
+
+.t-amount { font-weight: bold; font-size: 1.1rem; }
+.t-amount.income { color: var(--accent); }
+.t-amount.expense { color: var(--danger); }
+
+/* --- Forms & Inputs --- */
 .form-group {
     display: flex;
     gap: 10px;
     margin-bottom: 10px;
 }
 
-input, select, button {
+input, select, button#addBtn {
     padding: 12px;
     border: 1px solid #dfe6e9;
     border-radius: 8px;
     font-size: 1rem;
     outline: none;
+    background: var(--card-bg);
+    color: var(--text);
 }
-input:focus, select:focus { border-color: var(--primary); }
+
+body.dark-mode input, body.dark-mode select {
+    border-color: #444;
+}
+
 .input-flex { flex: 1; }
 
-button {
+button#addBtn {
     background: var(--primary);
     color: white;
     cursor: pointer;
     font-weight: 600;
-    transition: background 0.2s;
+    transition: 0.2s;
     border: none;
 }
-button:hover { background: #34495e; }
-.btn-secondary { background: #95a5a6; }
-.btn-secondary:hover { background: #7f8c8d; }
 
-/* Transaction List */
-.transaction-list {
-    max-height: 400px;
-    overflow-y: auto;
-}
-.transaction-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-    background: #fff;
-}
-.transaction-item:last-child { border-bottom: none; }
-.t-info h4 { margin: 0 0 5px 0; }
-.t-info small { color: #636e72; }
-.t-amount { font-weight: bold; }
-.t-amount.income { color: var(--accent); }
-.t-amount.expense { color: var(--danger); }
+button#addBtn:hover { opacity: 0.9; }
 
-/* Print styles */
+/* --- Chart --- */
+.chart-container {
+    height: 300px;
+    width: 100%;
+}
+
+/* --- Print Styles --- */
 @media print {
-    .navbar button, .add-transaction-card { display: none !important; }
-    body { background: white; }
-    #app { max-width: 100%; }
+    .navbar, 
+    #themeBtn, 
+    #logoutBtn, 
+    #dashLink, 
+    #profileLink,
+    .add-transaction-card { 
+        display: none !important; 
+    }
+
+    body { 
+        display: block !important; 
+        background: white !important; 
+        color: black !important;
+    }
+
+    #app { 
+        padding: 0 !important; 
+        margin: 0 !important;
+        overflow: visible !important;
+        width: 100% !important;
+    }
+
+    .card, .stat-card {
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+        break-inside: avoid; 
+    }
+
+    .dashboard-grid {
+        display: block !important; 
+    }
 }

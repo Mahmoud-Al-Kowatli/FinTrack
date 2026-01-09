@@ -10,14 +10,12 @@ export const DashboardUI = {
         const stats = AnalysisService.calculateTotals(transactions);
         const advice = AnalysisService.getRecommendation(stats.income, stats.expense);
         
-        // تغيير لون البطاقة بناء على الحالة المالية
         let balanceClass = 'balance-healthy';
         if (stats.income > 0) {
             if (stats.expense > stats.income * 0.9) balanceClass = 'balance-danger';
             else if (stats.expense > stats.income * 0.6) balanceClass = 'balance-warning';
         }
 
-        // توليد قائمة العمليات
         const listHtml = transactions.length === 0 ? '<p style="text-align:center; padding:20px; color:#7f8c8d">No transactions yet.</p>' : 
         transactions.slice().reverse().map(t => `
             <div class="transaction-item">
@@ -89,7 +87,7 @@ export const DashboardUI = {
     },
 
     afterRender: (navigate) => {
-        // --- 1. Add Transaction Logic (تم نقله للأعلى لضمان عمله أولاً) ---
+        
         const addBtn = document.getElementById('addBtn');
         if (addBtn) {
             addBtn.addEventListener('click', () => {
@@ -126,13 +124,12 @@ export const DashboardUI = {
             const canvasEl = document.getElementById('expenseChart');
             const ctx = canvasEl.getContext('2d');
             
-            // تدمير الرسم القديم إذا وجد لتجنب التداخل
             if (window.myExpenseChart) {
                 window.myExpenseChart.destroy();
             }
 
             if (chartData.data.length === 0) {
-                // Fix: استخدام ctx.canvas.width بدلاً من canvas.width غير المعرفة
+                
                 ctx.font = "14px Segoe UI";
                 ctx.fillStyle = "#95a5a6";
                 ctx.textAlign = "center";

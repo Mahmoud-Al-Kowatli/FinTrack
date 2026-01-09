@@ -1,54 +1,67 @@
 import { AuthService } from './services/AuthService.js';
 import { AuthUI } from './components/AuthUI.js';
 import { DashboardUI } from './components/DashboardUI.js';
+// ملاحظة: يمكنك وضع ProfileUI هنا مباشرة أو في ملف منفصل
+const ProfileUI = {
+    render: () => `
+        <div class="card">
+            <h2>⚙️ Profile Settings</h2>
+            <div class="form-group" style="margin-top:20px">
+                <label>Current User:</label>
+                <input type="text" value="${AuthService.getCurrentUser()}" disabled class="input-flex">
+            </div>
+            <p>More settings coming soon...</p>
+        </div>
+    `,
+    afterRender: () => {}
+};
 
 const appContainer = document.getElementById('app');
-const logoutBtn = document.getElementById('logoutBtn');
-const printBtn = document.getElementById('printBtn');
+const mainNav = document.getElementById('main-nav');
 
-// Simple Router function
 function navigate(route) {
-    let component = null;
-    const currentUser = AuthService.getCurrentUser();
+    const user = AuthService.getCurrentUser();
+    let component;
 
-    if (route === 'auth') {
-        if (currentUser) { navigate('dashboard'); return; } // Redirect if already logged in
+    if (!user) {
         component = AuthUI;
-        logoutBtn.style.display = 'none';
-        printBtn.style.display = 'none';
-    } else if (route === 'dashboard') {
-        if (!currentUser) { navigate('auth'); return; } // Protect route
-        component = DashboardUI;
-        logoutBtn.style.display = 'block';
-        // Feature: Monthly Report Export (Print)
-        printBtn.style.display = 'block';
+        mainNav.style.display = 'none';
+        document.body.style.display = 'block'; // لصفحة الدخول
+    } else {
+        mainNav.style.display = 'flex';
+        document.body.style.display = 'flex'; // لشكل الـ Sidebar
+        
+        if (route === 'profile') component = ProfileUI;
+        else component = DashboardUI;
     }
 
-    // 1. Inject HTML
     appContainer.innerHTML = component.render();
-    
-    // 2. Attach Event Listeners & Initialize Scripts (like Charts)
-    if (component.afterRender) {
-        component.afterRender(navigate);
-    }
+    if (component.afterRender) component.afterRender(navigate);
 }
 
-// Initialize App
 function init() {
     const user = AuthService.getCurrentUser();
     navigate(user ? 'dashboard' : 'auth');
 
-    // Global Event Listeners
-    logoutBtn.addEventListener('click', (e) => {
-        e.preventDefault();
+    document.getElementById('dashLink').addEventListener('click', () => navigate('dashboard'));
+    document.getElementById('profileLink').addEventListener('click', () => navigate('profile'));
+    document.getElementById('logoutBtn').addEventListener('click', () => {
         AuthService.logout();
         navigate('auth');
     });
 
-    printBtn.addEventListener('click', () => {
-        window.print();
+    const themeBtn = document.getElementById('themeBtn');
+    themeBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        themeBtn.textContent = isDark ? '☀️ Light Mode' : '🌙 Dark Mode';
     });
+    const printBtn = document.getElementById('printBtn');
+    if (printBtn) {
+        printBtn.addEventListener('click', () => {
+            window.print();
+        });
+    }
 }
 
-// Start when DOM is ready
 document.addEventListener('DOMContentLoaded', init);

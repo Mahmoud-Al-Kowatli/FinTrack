@@ -8,11 +8,20 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <nav class="navbar">
-        <h1>FinTrack Pro 💰</h1>
-        <div>
-            <button id="printBtn" style="display: none; margin-right: 10px; background: #34495e;">🖨️ Print Report</button>
-            <button id="logoutBtn" style="display: none;">Log Out</button>
+    <nav class="navbar" id="main-nav" style="display: none;">
+        <div class="sidebar-top">
+            <h1>FinTrack 💰</h1>
+        </div>
+        
+        <div class="sidebar-links">
+            <button id="dashLink" class="nav-btn active">📊 Dashboard</button>
+            <button id="profileLink" class="nav-btn">⚙️ Profile Settings</button>
+        </div>
+
+        <div class="sidebar-bottom">
+            <button id="themeBtn" class="nav-btn">🌙 Dark Mode</button>
+            <button id="printBtn" class="nav-btn">🖨️ Print Report</button>
+            <button id="logoutBtn" class="nav-btn">🚪 Log Out</button>
         </div>
     </nav>
     
